@@ -689,6 +689,7 @@ function getAppSettings(?PDO $pdo = null, bool $forceRefresh = false): array
         'enable_games'                  => '1',
         'enable_mindmap'                => '1',
         'enable_budget'                 => '1',
+        'enable_split'                  => '1',
         'enable_club'                   => '1',
         'enable_gallery'                => '1',
         'enable_forms'                  => '1',
@@ -3197,6 +3198,13 @@ function getModuleStatsCatalog(): array
             'setting_key' => 'enable_translator',
             'color'       => 'bg-sky-600',
         ],
+        'split' => [
+            'icon'        => '🧾',
+            'label'       => 'Kostenaufteilung & Reisekasse',
+            'url'         => 'split.php',
+            'setting_key' => 'enable_split',
+            'color'       => 'bg-emerald-600',
+        ],
         'webdav' => [
             'icon'        => '📡',
             'label'       => 'WebDAV / CalDAV / CardDAV Sync',
@@ -3249,6 +3257,7 @@ function detectCurrentModuleKeyForStats(): ?string
         'surflog.php'      => 'surflog',
         'cinema.php'       => 'cinema',
         'translate.php'    => 'translator',
+        'split.php'        => 'split',
         'webdav.php', 'caldav.php', 'carddav.php' => 'webdav',
         default         => null,
     };

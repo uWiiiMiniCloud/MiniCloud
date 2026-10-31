@@ -193,6 +193,18 @@ $allModules = [
         'badgeCls' => 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300',
     ],
     [
+        'key'      => 'split',
+        'enabled'  => ($appSettings['enable_split'] ?? '1') === '1',
+        'title'    => 'Kostenaufteilung & Reisekasse',
+        'icon'     => '🧾',
+        'url'      => 'split.php',
+        'category' => 'org_team',
+        'catLabel' => 'Organisation & Team',
+        'desc'     => 'Gruppen-Kostenabrechnung für Reisen, Ausflüge & Projekte: Kostenpunkte (z. B. Busfahrt, Essen) mit beliebigen Profiteuren (Cloud-Nutzer & Freitext-Gäste) erfassen und automatisch berechnen, wer wem wie viel schuldet.',
+        'badge'    => 'Neu',
+        'badgeCls' => 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300',
+    ],
+    [
         'key'      => 'club',
         'enabled'  => ($appSettings['enable_club'] ?? '1') === '1',
         'title'    => 'Vereinsverwaltung',
