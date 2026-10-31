@@ -56,7 +56,7 @@ if (!headers_sent()) {
 function ensureUserSecurityColumns(PDO $pdo): void
 {
     static $checked = false;
-    if ($checked || (!empty($_SESSION['_mc_user_sec_cols_ok']) && $_SESSION['_mc_user_sec_cols_ok'] === 1)) {
+    if ($checked || (!empty($_SESSION['_mc_user_sec_cols_v2_ok']) && $_SESSION['_mc_user_sec_cols_v2_ok'] === 1)) {
         $checked = true;
         return;
     }
@@ -77,8 +77,11 @@ function ensureUserSecurityColumns(PDO $pdo): void
         if (!isset($cols['admin_permissions'])) {
             $pdo->exec("ALTER TABLE `users` ADD COLUMN `admin_permissions` VARCHAR(255) NOT NULL DEFAULT '' AFTER `lock_reason`");
         }
+        if (!isset($cols['ui_style'])) {
+            $pdo->exec("ALTER TABLE `users` ADD COLUMN `ui_style` VARCHAR(24) NOT NULL DEFAULT 'modern' AFTER `theme`");
+        }
         if (session_status() === PHP_SESSION_ACTIVE) {
-            $_SESSION['_mc_user_sec_cols_ok'] = 1;
+            $_SESSION['_mc_user_sec_cols_v2_ok'] = 1;
         }
     } catch (Throwable) {
         // Ignorieren falls DB noch im Aufbau
@@ -155,7 +158,7 @@ function isLoggedIn(): bool
             $pdo = getDB();
             ensureUserSecurityColumns($pdo);
             $stmt = $pdo->prepare(
-                'SELECT username, is_admin, is_locked, lock_reason, admin_permissions, theme, session_timeout, flash_duration, chat_notify_mode
+                'SELECT username, is_admin, is_locked, lock_reason, admin_permissions, theme, ui_style, session_timeout, flash_duration, chat_notify_mode
                  FROM users
                  WHERE id = :id
                  LIMIT 1'
@@ -187,6 +190,7 @@ function isLoggedIn(): bool
                 $_SESSION['is_admin']          = ((int)$row['is_admin'] === 1);
                 $_SESSION['admin_permissions'] = parseAdminPermissionsString((string)($row['admin_permissions'] ?? ''));
                 $_SESSION['theme']             = (string)($row['theme'] ?: 'light');
+                $_SESSION['ui_style']          = (string)($row['ui_style'] ?? 'modern') ?: 'modern';
                 $_SESSION['session_timeout']   = $timeoutMin;
                 $_SESSION['flash_duration']    = $flashSec;
                 $_SESSION['chat_notify_mode']  = $chatNotifyMode;
@@ -203,6 +207,7 @@ function isLoggedIn(): bool
             $_SESSION['is_admin']          = $_SESSION['is_admin'] ?? false;
             $_SESSION['admin_permissions'] = $_SESSION['admin_permissions'] ?? [];
             $_SESSION['theme']             = $_SESSION['theme'] ?? 'light';
+            $_SESSION['ui_style']          = $_SESSION['ui_style'] ?? 'modern';
             $_SESSION['session_timeout']   = $_SESSION['session_timeout'] ?? 30;
             $_SESSION['flash_duration']    = $_SESSION['flash_duration'] ?? 10;
             $_SESSION['chat_notify_mode']  = $_SESSION['chat_notify_mode'] ?? 1;
@@ -373,6 +378,77 @@ function getCurrentTheme(): string
         return (string)$_COOKIE['mc_theme'];
     }
     return 'light';
+}
+
+/**
+ * Liefert alle unterstützten Design-Stile (UI-Skins / Formensprachen).
+ *
+ * @return array<int, string>
+ */
+function getAllowedUiStyles(): array
+{
+    return ['modern', 'sharp', 'glass', 'brutalist', 'pill'];
+}
+
+/**
+ * Liefert die Beschreibungen und Metadaten der 5 Design-Stile (UI-Skins).
+ *
+ * @return array<string, array{label: string, short: string, icon: string, desc: string, preview_radius: string}>
+ */
+function getUiStyleDefinitions(): array
+{
+    return [
+        'modern' => [
+            'label'          => '✨ Modern Soft (Standard)',
+            'short'          => 'Modern',
+            'icon'           => '✨',
+            'desc'           => 'Harmonisch abgerundete Karten (16 px), dezente Schatten und weiche Übergänge.',
+            'preview_radius' => '14px',
+        ],
+        'sharp' => [
+            'label'          => '📐 Enterprise Sharp (Business / Bootstrap)',
+            'short'          => 'Sharp',
+            'icon'           => '📐',
+            'desc'           => 'Präzise, kantige Ecken (4 px), klare Rahmenlinien und sachliche Business-Optik.',
+            'preview_radius' => '3px',
+        ],
+        'glass' => [
+            'label'          => '🔮 Glassmorphism (Vision / macOS)',
+            'short'          => 'Glass',
+            'icon'           => '🔮',
+            'desc'           => 'Halbtransparentes Milchglas mit Tiefenunschärfe, feinen Lichtkanten und Atmosphäre.',
+            'preview_radius' => '18px',
+        ],
+        'brutalist' => [
+            'label'          => '⬛ Neo-Kontrast (Klar & Markant)',
+            'short'          => 'Kontrast',
+            'icon'           => '⬛',
+            'desc'           => 'Scharfe Kanten (0 px), kräftige 2-px-Konturen und markante Offset-Schatten.',
+            'preview_radius' => '0px',
+        ],
+        'pill' => [
+            'label'          => '🫧 Pill & Lounge (Ultra-Soft)',
+            'short'          => 'Pill',
+            'icon'           => '🫧',
+            'desc'           => 'Kapselrunde Buttons, extra weiche Lounge-Karten (26 px) und luftige Formen.',
+            'preview_radius' => '999px',
+        ],
+    ];
+}
+
+/**
+ * Liefert den aktuell gewählten Design-Stil (UI-Skin).
+ */
+function getCurrentUiStyle(): string
+{
+    $allowed = getAllowedUiStyles();
+    if (isLoggedIn() && isset($_SESSION['ui_style']) && in_array($_SESSION['ui_style'], $allowed, true)) {
+        return (string)$_SESSION['ui_style'];
+    }
+    if (isset($_COOKIE['mc_ui_style']) && in_array($_COOKIE['mc_ui_style'], $allowed, true)) {
+        return (string)$_COOKIE['mc_ui_style'];
+    }
+    return 'modern';
 }
 
 /**

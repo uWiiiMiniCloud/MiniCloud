@@ -24,6 +24,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' – ' . $appTitle : $appTitle . 
 $currentScript = basename((string)($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
 $flashes = getFlashes();
 $currentTheme = getCurrentTheme();
+$currentUiStyle = getCurrentUiStyle();
 $isDarkLike = in_array($currentTheme, ['dusk', 'mocha', 'petrol', 'plum', 'dark', 'ocean', 'forest', 'obsidian'], true);
 
 $headerStorageStats = null;
@@ -44,7 +45,7 @@ if (isLoggedIn()) {
 $pwaLogoHash = substr(hash('sha256', (string)$appLogoUri), 0, 10);
 ?>
 <!DOCTYPE html>
-<html lang="de" class="h-full <?= $isDarkLike ? 'dark' : '' ?> theme-<?= e($currentTheme) ?>" data-theme="<?= e($currentTheme) ?>">
+<html lang="de" class="h-full <?= $isDarkLike ? 'dark' : '' ?> theme-<?= e($currentTheme) ?> ui-style-<?= e($currentUiStyle) ?>" data-theme="<?= e($currentTheme) ?>" data-ui-style="<?= e($currentUiStyle) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -335,6 +336,136 @@ $pwaLogoHash = substr(hash('sha256', (string)$appLogoUri), 0, 10);
         .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 1px solid var(--border); }
         .modal-close { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); padding: 0.2rem 0.45rem; border-radius: 0.5rem; }
         .modal-close:hover { background: var(--bg-hover); color: inherit; }
+
+        /* ============================================================================
+           🎨 DESIGN-STILE / UI-SKINS (Zentral umschaltbare Formensprache)
+           ============================================================================ */
+
+        /* 1. 📐 ENTERPRISE SHARP (Business / Klassischer Bootstrap-Look) */
+        html.ui-style-sharp {
+            --radius: 0.25rem;
+            --radius-sm: 0.2rem;
+        }
+        html.ui-style-sharp .rounded-3xl,
+        html.ui-style-sharp .rounded-2xl,
+        html.ui-style-sharp .mc-card,
+        html.ui-style-sharp .card,
+        html.ui-style-sharp .contact-card,
+        html.ui-style-sharp .modal-box {
+            border-radius: 0.25rem !important;
+        }
+        html.ui-style-sharp .rounded-xl,
+        html.ui-style-sharp .rounded-lg,
+        html.ui-style-sharp .btn,
+        html.ui-style-sharp .form-control,
+        html.ui-style-sharp input:not([type="checkbox"]):not([type="radio"]),
+        html.ui-style-sharp select,
+        html.ui-style-sharp textarea,
+        html.ui-style-sharp button:not(.rounded-full) {
+            border-radius: 0.2rem !important;
+        }
+        html.ui-style-sharp .bg-gradient-to-r,
+        html.ui-style-sharp .bg-gradient-to-br {
+            background-image: none !important;
+        }
+
+        /* 2. 🔮 GLASSMORPHISM (Vision / macOS Milchglas-Optik) */
+        html.ui-style-glass body {
+            background-attachment: fixed !important;
+            background-image:
+                radial-gradient(circle at 12% 18%, rgba(59, 130, 246, 0.20), transparent 42%),
+                radial-gradient(circle at 88% 15%, rgba(139, 92, 246, 0.18), transparent 40%),
+                radial-gradient(circle at 52% 85%, rgba(16, 185, 129, 0.14), transparent 46%) !important;
+        }
+        html.ui-style-glass header {
+            background-color: color-mix(in srgb, var(--bg-card) 68%, transparent) !important;
+            backdrop-filter: blur(20px) saturate(170%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(170%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.22) !important;
+        }
+        html.ui-style-glass .mc-card,
+        html.ui-style-glass .card,
+        html.ui-style-glass .contact-card,
+        html.ui-style-glass .modal-box,
+        html.ui-style-glass main .bg-white.rounded-2xl {
+            background-color: color-mix(in srgb, var(--bg-card) 72%, transparent) !important;
+            backdrop-filter: blur(18px) saturate(165%) !important;
+            -webkit-backdrop-filter: blur(18px) saturate(165%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.34) !important;
+            box-shadow: 0 12px 32px -6px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+            border-radius: 1.25rem !important;
+        }
+        html.ui-style-glass.dark .mc-card,
+        html.ui-style-glass.dark .card,
+        html.ui-style-glass.dark .contact-card,
+        html.ui-style-glass.dark .modal-box,
+        html.ui-style-glass.dark main .bg-white.rounded-2xl {
+            border: 1px solid rgba(255, 255, 255, 0.13) !important;
+            box-shadow: 0 14px 36px -6px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+        }
+
+        /* 3. ⬛ NEO-KONTRAST (Brutalist / Gestochen scharfe 2px-Konturen & Offset-Schatten) */
+        html.ui-style-brutalist .rounded-3xl,
+        html.ui-style-brutalist .rounded-2xl,
+        html.ui-style-brutalist .rounded-xl,
+        html.ui-style-brutalist .rounded-lg,
+        html.ui-style-brutalist .mc-card,
+        html.ui-style-brutalist .card,
+        html.ui-style-brutalist .contact-card,
+        html.ui-style-brutalist .modal-box,
+        html.ui-style-brutalist .btn,
+        html.ui-style-brutalist .form-control,
+        html.ui-style-brutalist input:not([type="checkbox"]):not([type="radio"]),
+        html.ui-style-brutalist select,
+        html.ui-style-brutalist textarea,
+        html.ui-style-brutalist button {
+            border-radius: 0px !important;
+        }
+        html.ui-style-brutalist .mc-card,
+        html.ui-style-brutalist .card,
+        html.ui-style-brutalist .contact-card,
+        html.ui-style-brutalist .modal-box,
+        html.ui-style-brutalist main .bg-white.rounded-2xl {
+            border-width: 2px !important;
+            border-color: rgba(15, 23, 42, 0.75) !important;
+            box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.35) !important;
+        }
+        html.ui-style-brutalist.dark .mc-card,
+        html.ui-style-brutalist.dark .card,
+        html.ui-style-brutalist.dark .contact-card,
+        html.ui-style-brutalist.dark .modal-box,
+        html.ui-style-brutalist.dark main .bg-white.rounded-2xl {
+            border-color: rgba(148, 163, 184, 0.65) !important;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.65) !important;
+        }
+        html.ui-style-brutalist header {
+            border-bottom-width: 2px !important;
+            border-bottom-color: rgba(15, 23, 42, 0.75) !important;
+        }
+        html.ui-style-brutalist.dark header {
+            border-bottom-color: rgba(148, 163, 184, 0.65) !important;
+        }
+
+        /* 4. 🫧 PILL & LOUNGE (Ultra-Abgerundet / Organisch weich) */
+        html.ui-style-pill .mc-card,
+        html.ui-style-pill .card,
+        html.ui-style-pill .contact-card,
+        html.ui-style-pill .modal-box,
+        html.ui-style-pill main .bg-white.rounded-2xl {
+            border-radius: 1.75rem !important;
+            box-shadow: 0 10px 28px -8px rgba(15, 23, 42, 0.12) !important;
+        }
+        html.ui-style-pill .btn,
+        html.ui-style-pill button:not([role="switch"]),
+        html.ui-style-pill a.rounded-xl,
+        html.ui-style-pill a.rounded-lg,
+        html.ui-style-pill input:not([type="checkbox"]):not([type="radio"]),
+        html.ui-style-pill select {
+            border-radius: 9999px !important;
+        }
+        html.ui-style-pill textarea {
+            border-radius: 1.35rem !important;
+        }
     </style>
 </head>
 <body class="min-h-full flex flex-col overflow-x-hidden bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-600 selection:text-white transition-colors duration-200">
@@ -884,6 +1015,29 @@ $pwaLogoHash = substr(hash('sha256', (string)$appLogoUri), 0, 10);
                             </a>
                         </div>
 
+                        <!-- 🎨 Live Design-Stil / UI-Skin Schnellwechsler -->
+                        <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800">
+                            <div class="flex items-center justify-between mb-1.5 px-1">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">🎨 Design-Stil (Live)</span>
+                                <a href="settings.php#sec-ui-style" class="text-[10px] font-semibold text-brand-600 dark:text-brand-400 hover:underline">Alle &rarr;</a>
+                            </div>
+                            <div class="grid grid-cols-5 gap-1" id="headerUiStylePicker">
+                                <?php foreach (getUiStyleDefinitions() as $stKey => $stMeta): ?>
+                                    <?php $isStActive = ($currentUiStyle === $stKey); ?>
+                                    <button
+                                        type="button"
+                                        data-ui-style-btn="<?= e($stKey) ?>"
+                                        onclick="window.switchMcUiStyle('<?= e($stKey) ?>', '<?= e(getCsrfToken()) ?>')"
+                                        title="<?= e($stMeta['label'] . ' – ' . $stMeta['desc']) ?>"
+                                        class="flex flex-col items-center justify-center py-1.5 px-1 rounded-lg border text-[10px] font-bold transition-all cursor-pointer <?= $isStActive ? 'bg-brand-600 text-white border-brand-600 shadow-2xs' : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-400' ?>"
+                                    >
+                                        <span class="text-xs leading-none mb-0.5"><?= e($stMeta['icon']) ?></span>
+                                        <span class="truncate max-w-full leading-tight"><?= e($stMeta['short']) ?></span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
                         <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800">
                             <form action="logout.php" method="post" class="m-0">
                                 <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">
@@ -1161,6 +1315,37 @@ $pwaLogoHash = substr(hash('sha256', (string)$appLogoUri), 0, 10);
                                 el.classList.add('hidden');
                             }
                         });
+                    };
+
+                    window.switchMcUiStyle = function(style, csrf) {
+                        const allowed = ['modern', 'sharp', 'glass', 'brutalist', 'pill'];
+                        if (!allowed.includes(style)) return;
+                        const html = document.documentElement;
+                        allowed.forEach(s => html.classList.remove('ui-style-' + s));
+                        html.classList.add('ui-style-' + style);
+                        html.setAttribute('data-ui-style', style);
+
+                        document.querySelectorAll('[data-ui-style-btn]').forEach(btn => {
+                            const isAct = btn.getAttribute('data-ui-style-btn') === style;
+                            btn.className = 'flex flex-col items-center justify-center py-1.5 px-1 rounded-lg border text-[10px] font-bold transition-all cursor-pointer ' + (
+                                isAct
+                                    ? 'bg-brand-600 text-white border-brand-600 shadow-2xs'
+                                    : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-400'
+                            );
+                        });
+
+                        const fd = new URLSearchParams();
+                        fd.set('ui_style', style);
+                        fd.set('csrf_token', csrf || '');
+                        fetch('theme.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            },
+                            body: fd.toString()
+                        }).catch(() => {});
                     };
 
                     document.addEventListener('click', function(e) {

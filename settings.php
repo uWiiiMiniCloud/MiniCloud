@@ -381,7 +381,57 @@ $themeGroups = [
         </form>
     </section>
 
-    <!-- 2. FARBDESIGN / THEME WÄHLEN -->
+    <!-- 2. DESIGN-STIL / FORMEN-SPRACHE (UI-SKIN) WÄHLEN -->
+    <section id="sec-ui-style" class="mc-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div>
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-0.5">🎨 Design-Stil &amp; Formensprache (UI-Skin)</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Steuert das gesamte Erscheinungsbild (Karten-Rundungen, Glas-Effekte, Konturen &amp; Button-Formen) – frei kombinierbar mit allen 13 Farbschemata darunter.
+                </p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/70 dark:border-brand-800/70 self-start sm:self-auto shrink-0">
+                ⚡ Auch oben rechts im Benutzermenü live umschaltbar
+            </span>
+        </div>
+
+        <form action="theme.php" method="post" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <input type="hidden" name="csrf_token" value="<?= e(getCsrfToken()) ?>">
+            <?php foreach (getUiStyleDefinitions() as $stKey => $stMeta): ?>
+                <?php $isSelectedStyle = ($currentUiStyle === $stKey); ?>
+                <button
+                    type="submit"
+                    name="ui_style"
+                    value="<?= e($stKey) ?>"
+                    class="flex flex-col justify-between gap-2.5 p-3.5 rounded-xl border text-left transition-all cursor-pointer <?= $isSelectedStyle ? 'ring-2 ring-brand-500 border-brand-500 bg-brand-50/40 dark:bg-brand-950/30' : 'border-slate-200 dark:border-slate-700/80 hover:border-brand-400 bg-slate-50/50 dark:bg-slate-800/50' ?>"
+                >
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                                <?= e($stMeta['label']) ?>
+                            </span>
+                            <?php if ($isSelectedStyle): ?>
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400 shrink-0">✓</span>
+                            <?php endif; ?>
+                        </div>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                            <?= e($stMeta['desc']) ?>
+                        </p>
+                    </div>
+                    <!-- Mini-Form-Vorschau -->
+                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2">
+                        <span
+                            class="inline-block w-8 h-5 bg-brand-600/20 dark:bg-brand-400/20 border border-brand-500/60"
+                            style="border-radius: <?= e($stMeta['preview_radius']) ?>; <?= $stKey === 'brutalist' ? 'border-width:2px;box-shadow:2px 2px 0 currentColor;' : ($stKey === 'glass' ? 'backdrop-filter:blur(6px);background:rgba(59,130,246,0.28);' : '') ?>"
+                        ></span>
+                        <span class="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Radius: <?= e($stMeta['preview_radius']) ?></span>
+                    </div>
+                </button>
+            <?php endforeach; ?>
+        </form>
+    </section>
+
+    <!-- 2b. FARBDESIGN / THEME WÄHLEN -->
     <section class="mc-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs">
         <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1">Design-Theme wählen</h2>
         <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">

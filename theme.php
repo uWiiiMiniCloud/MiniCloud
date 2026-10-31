@@ -17,25 +17,52 @@ if (!verifyCsrfToken(is_string($csrfToken) ? $csrfToken : null)) {
 }
 
 $allowedThemes = getAllowedThemes();
-$theme = isset($_POST['theme']) && is_string($_POST['theme']) ? trim($_POST['theme']) : 'light';
-if (!in_array($theme, $allowedThemes, true)) {
-    $theme = 'light';
+$allowedStyles = getAllowedUiStyles();
+
+$theme   = getCurrentTheme();
+$uiStyle = getCurrentUiStyle();
+
+if (isset($_POST['theme']) && is_string($_POST['theme'])) {
+    $reqTheme = trim($_POST['theme']);
+    if (in_array($reqTheme, $allowedThemes, true)) {
+        $theme = $reqTheme;
+        setcookie('mc_theme', $theme, [
+            'expires'  => time() + 86400 * 365,
+            'path'     => '/',
+            'samesite' => 'Lax',
+        ]);
+        if (isLoggedIn()) {
+            $_SESSION['theme'] = $theme;
+            $pdo = getDB();
+            $stmt = $pdo->prepare('UPDATE users SET theme = :theme WHERE id = :id');
+            $stmt->execute([
+                ':theme' => $theme,
+                ':id'    => (int)$_SESSION['user_id'],
+            ]);
+        }
+    }
 }
 
-setcookie('mc_theme', $theme, [
-    'expires'  => time() + 86400 * 365,
-    'path'     => '/',
-    'samesite' => 'Lax',
-]);
-
-if (isLoggedIn()) {
-    $_SESSION['theme'] = $theme;
-    $pdo = getDB();
-    $stmt = $pdo->prepare('UPDATE users SET theme = :theme WHERE id = :id');
-    $stmt->execute([
-        ':theme' => $theme,
-        ':id'    => (int)$_SESSION['user_id'],
-    ]);
+if (isset($_POST['ui_style']) && is_string($_POST['ui_style'])) {
+    $reqStyle = trim($_POST['ui_style']);
+    if (in_array($reqStyle, $allowedStyles, true)) {
+        $uiStyle = $reqStyle;
+        setcookie('mc_ui_style', $uiStyle, [
+            'expires'  => time() + 86400 * 365,
+            'path'     => '/',
+            'samesite' => 'Lax',
+        ]);
+        if (isLoggedIn()) {
+            $_SESSION['ui_style'] = $uiStyle;
+            $pdo = getDB();
+            ensureUserSecurityColumns($pdo);
+            $stmt = $pdo->prepare('UPDATE users SET ui_style = :s WHERE id = :id');
+            $stmt->execute([
+                ':s'  => $uiStyle,
+                ':id' => (int)$_SESSION['user_id'],
+            ]);
+        }
+    }
 }
 
 $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)$_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
@@ -43,7 +70,7 @@ $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)$_SERV
 
 if ($isAjax) {
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['success' => true, 'theme' => $theme]);
+    echo json_encode(['success' => true, 'theme' => $theme, 'ui_style' => $uiStyle]);
     exit;
 }
 
