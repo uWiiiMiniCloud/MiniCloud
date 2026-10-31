@@ -1594,56 +1594,6 @@ $baseGfQuery = $activeGroupFolder !== null ? 'group_folder=' . (int)$activeGroup
                         </tr>
                     <?php endif; ?>
 
-                    <!-- 0. Andersfarbiger virtueller Ordner "👥 Für mich freigegeben" im Hauptverzeichnis -->
-                    <?php if ($showSharedVirtualFolder): ?>
-                        <tr class="bg-blue-50/35 dark:bg-blue-950/20 hover:bg-blue-100/50 dark:hover:bg-blue-950/40 transition-all">
-                            <td class="py-3 pl-2.5 pr-1 sm:pl-6 sm:pr-2 w-8 sm:w-9 align-middle text-center">
-                                <span class="text-xs text-blue-500 dark:text-blue-400" title="Systemordner für empfangene Benutzer-Freigaben">👥</span>
-                            </td>
-                            <td class="py-3 px-1.5 sm:px-4 max-w-[140px] sm:max-w-none overflow-hidden">
-                                <div class="flex items-start sm:items-center gap-2 sm:gap-3 min-w-0">
-                                    <a href="index.php?shared_with_me=1" class="inline-flex items-center justify-center w-8 h-7 sm:w-10 sm:h-8 rounded-lg bg-blue-100 dark:bg-blue-900/80 text-blue-600 dark:text-blue-300 shrink-0 mt-0.5 sm:mt-0" title="Von anderen Cloud-Benutzern für mich freigegebene Ordner &amp; Dateien öffnen">
-                                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
-                                        </svg>
-                                    </a>
-                                    <div class="min-w-0 flex-1">
-                                        <div class="flex flex-wrap items-center gap-1.5 min-w-0">
-                                            <a href="index.php?shared_with_me=1" class="font-bold text-blue-900 dark:text-blue-200 hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[140px] sm:max-w-xs md:max-w-md block">
-                                                Für mich freigegeben (Von Cloud-Benutzern)
-                                            </a>
-                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold <?= $totalSharedWithMeCount > 0 ? 'bg-blue-600 text-white shadow-2xs' : 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300' ?>">
-                                                👥 <?= $totalSharedWithMeCount ?>
-                                            </span>
-                                        </div>
-                                        <p class="text-[11px] text-blue-700/80 dark:text-blue-300/80 mt-0.5 truncate max-w-[140px] sm:max-w-none">
-                                            <?= count($sharedWithMeFolders) ?> <?= count($sharedWithMeFolders) === 1 ? 'Ordner' : 'Ordner' ?> &bull;
-                                            <?= count($sharedWithMeFiles) ?> <?= count($sharedWithMeFiles) === 1 ? 'Datei' : 'Dateien' ?>
-                                            <span class="sm:hidden"> &bull; <?= e(formatBytes($totalSharedWithMeSize)) ?></span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-3 px-4 whitespace-nowrap hidden md:table-cell text-xs text-blue-700 dark:text-blue-400 font-medium">
-                                👥 Cloud-Freigaben
-                            </td>
-                            <td class="py-3 px-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium hidden sm:table-cell">
-                                <?= e(formatBytes($totalSharedWithMeSize)) ?>
-                            </td>
-                            <td class="py-3 px-4 whitespace-nowrap text-xs text-blue-700 dark:text-blue-400 font-medium hidden lg:table-cell">
-                                👥 Geteilter Bereich
-                            </td>
-                            <td class="py-3 pl-1 pr-2.5 sm:px-6 whitespace-nowrap text-right align-middle">
-                                <a
-                                    href="index.php?shared_with_me=1"
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-2xs"
-                                >
-                                    <span>Öffnen</span>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-
                     <!-- 0b. Freigegebene Ordner innerhalb von "👥 Für mich freigegeben" (?shared_with_me=1) -->
                     <?php if ($sharedWithMeMode): ?>
                         <?php foreach ($sharedWithMeFolders as $sFolder): ?>
@@ -2329,6 +2279,56 @@ $baseGfQuery = $activeGroupFolder !== null ? 'group_folder=' . (int)$activeGroup
                             </td>
                         </tr>
                     <?php endforeach; ?>
+
+                    <!-- Ganz unten angeheftet: Andersfarbiger virtueller Ordner "👥 Für mich freigegeben" -->
+                    <?php if ($showSharedVirtualFolder): ?>
+                        <tr class="bg-blue-50/35 dark:bg-blue-950/20 hover:bg-blue-100/50 dark:hover:bg-blue-950/40 transition-all border-t-2 border-blue-200/70 dark:border-blue-800/70">
+                            <td class="py-3 pl-2.5 pr-1 sm:pl-6 sm:pr-2 w-8 sm:w-9 align-middle text-center">
+                                <span class="text-xs text-blue-500 dark:text-blue-400" title="Systemordner für empfangene Benutzer-Freigaben (unten angeheftet)">👥</span>
+                            </td>
+                            <td class="py-3 px-1.5 sm:px-4 max-w-[140px] sm:max-w-none overflow-hidden">
+                                <div class="flex items-start sm:items-center gap-2 sm:gap-3 min-w-0">
+                                    <a href="index.php?shared_with_me=1" class="inline-flex items-center justify-center w-8 h-7 sm:w-10 sm:h-8 rounded-lg bg-blue-100 dark:bg-blue-900/80 text-blue-600 dark:text-blue-300 shrink-0 mt-0.5 sm:mt-0" title="Von anderen Cloud-Benutzern für mich freigegebene Ordner &amp; Dateien öffnen">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                                        </svg>
+                                    </a>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex flex-wrap items-center gap-1.5 min-w-0">
+                                            <a href="index.php?shared_with_me=1" class="font-bold text-blue-900 dark:text-blue-200 hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[140px] sm:max-w-xs md:max-w-md block">
+                                                Für mich freigegeben (Von Cloud-Benutzern)
+                                            </a>
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold <?= $totalSharedWithMeCount > 0 ? 'bg-blue-600 text-white shadow-2xs' : 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300' ?>">
+                                                👥 <?= $totalSharedWithMeCount ?>
+                                            </span>
+                                        </div>
+                                        <p class="text-[11px] text-blue-700/80 dark:text-blue-300/80 mt-0.5 truncate max-w-[140px] sm:max-w-none">
+                                            <?= count($sharedWithMeFolders) ?> <?= count($sharedWithMeFolders) === 1 ? 'Ordner' : 'Ordner' ?> &bull;
+                                            <?= count($sharedWithMeFiles) ?> <?= count($sharedWithMeFiles) === 1 ? 'Datei' : 'Dateien' ?>
+                                            <span class="sm:hidden"> &bull; <?= e(formatBytes($totalSharedWithMeSize)) ?></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 whitespace-nowrap hidden md:table-cell text-xs text-blue-700 dark:text-blue-400 font-medium">
+                                👥 Cloud-Freigaben
+                            </td>
+                            <td class="py-3 px-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium hidden sm:table-cell">
+                                <?= e(formatBytes($totalSharedWithMeSize)) ?>
+                            </td>
+                            <td class="py-3 px-4 whitespace-nowrap text-xs text-blue-700 dark:text-blue-400 font-medium hidden lg:table-cell">
+                                👥 Geteilter Bereich
+                            </td>
+                            <td class="py-3 pl-1 pr-2.5 sm:px-6 whitespace-nowrap text-right align-middle">
+                                <a
+                                    href="index.php?shared_with_me=1"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-2xs"
+                                >
+                                    <span>Öffnen</span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -2370,28 +2370,6 @@ $baseGfQuery = $activeGroupFolder !== null ? 'group_folder=' . (int)$activeGroup
                         </p>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                             <?= e($upLabelGrid) ?>
-                        </p>
-                    </div>
-                </a>
-            <?php endif; ?>
-
-            <?php if ($showSharedVirtualFolder): ?>
-                <a
-                    href="index.php?shared_with_me=1"
-                    class="group flex flex-col justify-between p-3.5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/25 border border-blue-200/80 dark:border-blue-800/70 hover:border-blue-400 dark:hover:border-blue-500 transition-all shadow-2xs"
-                    title="Für mich freigegebene Ordner &amp; Dateien von anderen Cloud-Benutzern öffnen"
-                >
-                    <div class="flex items-center justify-center h-28 rounded-xl bg-blue-100/80 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 mb-2.5 group-hover:scale-[1.02] transition-transform">
-                        <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 truncate">
-                            👥 Für mich freigegeben
-                        </p>
-                        <p class="text-[11px] text-blue-700/80 dark:text-blue-300/80 mt-0.5">
-                            <?= count($sharedWithMeFolders) ?> Ordner &bull; <?= count($sharedWithMeFiles) ?> <?= count($sharedWithMeFiles) === 1 ? 'Datei' : 'Dateien' ?>
                         </p>
                     </div>
                 </a>
@@ -2550,6 +2528,28 @@ $baseGfQuery = $activeGroupFolder !== null ? 'group_folder=' . (int)$activeGroup
                     </div>
                 </div>
             <?php endforeach; ?>
+
+            <?php if ($showSharedVirtualFolder): ?>
+                <a
+                    href="index.php?shared_with_me=1"
+                    class="group flex flex-col justify-between p-3.5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/25 border border-blue-200/80 dark:border-blue-800/70 hover:border-blue-400 dark:hover:border-blue-500 transition-all shadow-2xs"
+                    title="Für mich freigegebene Ordner &amp; Dateien von anderen Cloud-Benutzern öffnen (unten angeheftet)"
+                >
+                    <div class="flex items-center justify-center h-28 rounded-xl bg-blue-100/80 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 mb-2.5 group-hover:scale-[1.02] transition-transform">
+                        <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200 truncate">
+                            👥 Für mich freigegeben
+                        </p>
+                        <p class="text-[11px] text-blue-700/80 dark:text-blue-300/80 mt-0.5">
+                            <?= count($sharedWithMeFolders) ?> Ordner &bull; <?= count($sharedWithMeFiles) ?> <?= count($sharedWithMeFiles) === 1 ? 'Datei' : 'Dateien' ?>
+                        </p>
+                    </div>
+                </a>
+            <?php endif; ?>
         </div>
 
         <?php if (!$largeFilesMode && $totalPages > 1): ?>
